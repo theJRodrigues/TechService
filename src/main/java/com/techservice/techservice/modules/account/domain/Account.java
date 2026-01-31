@@ -36,7 +36,7 @@ public class Account {
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false, nullable = false)
-    private Instant createdAt ;
+    private Instant createdAt;
 
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
@@ -47,9 +47,10 @@ public class Account {
         this.email = email;
         this.password = password;
         this.role = role;
-        }
+    }
 
-    public Account() {}
+    public Account() {
+    }
 
     public UUID getId() {
         return id;

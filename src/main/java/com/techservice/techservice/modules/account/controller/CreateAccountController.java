@@ -22,7 +22,7 @@ public class CreateAccountController {
     }
 
     @PostMapping
-    public ResponseEntity<AccountResponse> execute(@Valid @RequestBody CreateAccountRequest dto){
+    public ResponseEntity<AccountResponse> execute(@Valid @RequestBody CreateAccountRequest dto) {
         AccountResponse response = useCase.execute(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
