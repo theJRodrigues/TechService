@@ -11,6 +11,7 @@ import com.techservice.techservice.shared.enums.Role;
 import com.techservice.techservice.shared.exceptions.CNPJAlreadyExistsException;
 import com.techservice.techservice.shared.exceptions.EmailAlreadyExistsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,13 +19,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class CreateCompanyUseCase {
     private final CompanyRepository repository;
     private final AccountRepository accountRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public CreateCompanyUseCase(CompanyRepository repository,
-                                AccountRepository accountRepository) {
+                                AccountRepository accountRepository,
+                                PasswordEncoder encoder) {
         this.repository = repository;
         this.accountRepository = accountRepository;
-        this.passwordEncoder = new BCryptPasswordEncoder();
+        this.passwordEncoder = encoder;
     }
 
     @Transactional
