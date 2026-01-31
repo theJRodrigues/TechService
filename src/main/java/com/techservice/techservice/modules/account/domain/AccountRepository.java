@@ -14,5 +14,7 @@ public interface AccountRepository {
     Optional<Account> findById(UUID id);
 
     void deleteById(UUID id);
+
+    Optional<Account> findByEmail(String email);
 }
 
