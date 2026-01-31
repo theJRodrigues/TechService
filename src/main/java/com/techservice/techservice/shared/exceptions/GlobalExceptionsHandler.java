@@ -24,6 +24,17 @@ public class GlobalExceptionsHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
+    @ExceptionHandler(CNPJAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse<?>> handleCNPJAlreadyExists(CNPJAlreadyExistsException ex){
+
+        ErrorResponse<String> error = new ErrorResponse<>(
+                HttpStatus.CONFLICT.value(),
+                "BUSINESS_RULE_VIOLATION",
+                ex.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse<?>> handleValidationError(MethodArgumentNotValidException ex){
         Map<String, String>  errorsMap = new HashMap<>();

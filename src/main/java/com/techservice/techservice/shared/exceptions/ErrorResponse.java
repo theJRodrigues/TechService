@@ -1,5 +1,6 @@
 package com.techservice.techservice.shared.exceptions;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -8,13 +9,13 @@ public class ErrorResponse<T> {
     private final int status;
     private final String error;
     private final T message;
-    private final LocalDateTime timestamp;
+    private final Instant timestamp;
 
     public ErrorResponse(int status, String error, T message) {
         this.status = status;
         this.error = error;
         this.message = message;
-        this.timestamp = LocalDateTime.now();
+        this.timestamp = Instant.now();
     }
 
     public int getStatus() {
@@ -29,7 +30,7 @@ public class ErrorResponse<T> {
         return message;
     }
 
-    public LocalDateTime getTimestamp() {
+    public Instant getTimestamp() {
         return timestamp;
     }
 }
