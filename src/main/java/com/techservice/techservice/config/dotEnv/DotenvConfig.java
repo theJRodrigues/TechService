@@ -13,5 +13,7 @@ public class DotenvConfig {
         System.setProperty("POSTGRES_USER", dotenv.get("POSTGRES_USER"));
         System.setProperty("POSTGRES_PASSWORD", dotenv.get("POSTGRES_PASSWORD"));
         System.setProperty("JPA_DDL_AUTO", dotenv.get("JPA_DDL_AUTO"));
+        System.setProperty("JWT_SECRET", dotenv.get("JWT_SECRET"));
+        System.setProperty("JWT_EXPIRATION", dotenv.get("JWT_EXPIRATION"));
     }
 }
