@@ -1,6 +1,7 @@
 package com.techservice.techservice.shared.services;
 import com.techservice.techservice.modules.account.domain.Account;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,7 +37,7 @@ public class JWTService {
                 .compact();
     }
 
-    public TokenPayload validateTokenAndGetClaims(String token){
+    public TokenPayload validateTokenAndGetClaims(String token) throws JwtException, IllegalArgumentException {
             Claims claims = Jwts.parser()
                     .verifyWith(secretKey)
                     .build()
