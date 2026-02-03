@@ -78,17 +78,4 @@ public class GlobalExceptionsHandler {
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse<?>> handleGenericExceptions(Exception ex){
-        ErrorResponse<String> error = new ErrorResponse<>(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "INTERNAL_ERROR",
-                "Internal server error"
-        );
-
-        System.out.println(ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-    }
-
 }

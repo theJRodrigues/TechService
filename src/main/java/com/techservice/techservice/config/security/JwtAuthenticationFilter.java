@@ -41,6 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 accountRepository.findById(validToken.accountId())
                         .ifPresent(acc -> {
+                            System.out.println(validToken.role());
                             AuthenticatedAccount principal = new AuthenticatedAccount(
                                     acc.getId(),
                                     acc.getEmail(),
