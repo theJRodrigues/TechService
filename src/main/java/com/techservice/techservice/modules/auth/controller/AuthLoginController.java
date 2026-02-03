@@ -3,6 +3,7 @@ package com.techservice.techservice.modules.auth.controller;
 import com.techservice.techservice.modules.auth.dto.AuthLoginRequest;
 import com.techservice.techservice.modules.auth.dto.AuthLoginRequestResponse;
 import com.techservice.techservice.modules.auth.usecase.AuthLoginUseCase;
+import com.techservice.techservice.shared.Routes.Routes;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping(Routes.AUTH + "/login")
 public class AuthLoginController {
     private final AuthLoginUseCase useCase;
 
@@ -21,7 +22,7 @@ public class AuthLoginController {
         this.useCase = useCase;
     }
 
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<Void> execute(@Valid @RequestBody AuthLoginRequest dto){
         AuthLoginRequestResponse token = useCase.execute(dto);
         ResponseCookie cookie = ResponseCookie.from("access_token", token.accessToken())

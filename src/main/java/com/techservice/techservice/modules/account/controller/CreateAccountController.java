@@ -3,6 +3,7 @@ package com.techservice.techservice.modules.account.controller;
 import com.techservice.techservice.modules.account.dto.AccountResponse;
 import com.techservice.techservice.modules.account.dto.CreateAccountRequest;
 import com.techservice.techservice.modules.account.usecase.CreateAccountUseCase;
+import com.techservice.techservice.shared.Routes.Routes;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/create/account")
+@RequestMapping(Routes.ACCOUNT)
 public class CreateAccountController {
     private final CreateAccountUseCase useCase;
 
