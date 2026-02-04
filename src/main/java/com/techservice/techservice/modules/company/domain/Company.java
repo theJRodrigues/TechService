@@ -1,5 +1,7 @@
 package com.techservice.techservice.modules.company.domain;
 
+import com.techservice.techservice.modules.account.domain.Account;
+import com.techservice.techservice.shared.enums.Role;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -32,6 +34,10 @@ public class Company {
     public Company(String name, String CNPJ) {
         this.name = name;
         this.CNPJ = CNPJ;
+    }
+
+    public Account createAdmin(String name, String email, String password) {
+        return new Account(name, email, password, Role.ADMIN, this);
     }
 
     public UUID getId() {

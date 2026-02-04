@@ -31,24 +31,27 @@ public class CreateCompanyUseCase {
 
     @Transactional
     public CompanyResponseRequest execute(CreateCompanyRequest dto) {
-        if(repository.existsByCNPJ(dto.CNPJ())){
-            throw new CNPJAlreadyExistsException();
-        }
-        Company company = CompanyMapper.toEntity(dto);
-
-        if(accountRepository.existsByEmail(dto.adminEmail())){
+        if (accountRepository.existsByEmail(dto.adminEmail())) {
             throw new EmailAlreadyExistsException();
         }
 
-        Account admAccount = new Account(dto.adminName(),
+        if (repository.existsByCNPJ(dto.CNPJ())) {
+            throw new CNPJAlreadyExistsException();
+        }
+
+        Company company = CompanyMapper.toEntity(dto);
+        Company savedCompany = repository.save(company);
+
+        String hashedPassword = passwordEncoder.encode(dto.adminPassword());
+        Account admAccount = savedCompany.createAdmin(
+                dto.adminName(),
                 dto.adminEmail(),
-                dto.adminPassword(),
-                Role.ADMIN);
-        admAccount.setPassword(passwordEncoder.encode(admAccount.getPassword()));
-        repository.save(company);
+                hashedPassword
+        );
+
         accountRepository.save(admAccount);
 
-        return new CompanyResponseRequest(company.getId(), company.getName());
+        return new CompanyResponseRequest(savedCompany.getId(), savedCompany.getName());
     }
 
 }

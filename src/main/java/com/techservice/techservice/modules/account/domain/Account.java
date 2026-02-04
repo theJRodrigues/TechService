@@ -1,5 +1,6 @@
 package com.techservice.techservice.modules.account.domain;
 
+import com.techservice.techservice.modules.company.domain.Company;
 import com.techservice.techservice.shared.enums.Role;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -34,6 +35,13 @@ public class Account {
     @Column(nullable = false)
     private Role role;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "company_id",
+            nullable = false
+    )
+    private Company company;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false, nullable = false)
     private Instant createdAt;
@@ -42,14 +50,20 @@ public class Account {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-    public Account(String name, String email, String password, Role role) {
+    public Account(String name, String email, String password, Role role, Company company) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.company = company;
     }
 
-    public Account() {
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
     }
 
     public UUID getId() {
