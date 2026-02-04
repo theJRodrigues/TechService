@@ -35,22 +35,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String token = extractTokenFromCookies(request);
+
         if (token != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             try {
-                TokenPayload validToken = jwtService.validateTokenAndGetClaims(token);
+                TokenPayload payload = jwtService.validateTokenAndGetClaims(token);
 
-                accountRepository.findById(validToken.accountId())
+                accountRepository.findById(payload.id())
                         .ifPresent(acc -> {
-                            System.out.println(validToken.role());
                             AuthenticatedAccount principal = new AuthenticatedAccount(
-                                    acc.getId(),
-                                    acc.getEmail(),
-                                    validToken.role()
+                                    payload.id(),
+                                    payload.companyID(),
+                                    payload.role()
                             );
+
                             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                                     principal,
                                     null,
-                                    List.of(new SimpleGrantedAuthority("ROLE_" + validToken.role()))
+                                    List.of(new SimpleGrantedAuthority("ROLE_" + payload.role().name()))
                             );
                             SecurityContextHolder.getContext().setAuthentication(auth);
                         });

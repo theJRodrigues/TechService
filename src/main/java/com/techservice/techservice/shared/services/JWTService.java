@@ -1,5 +1,7 @@
 package com.techservice.techservice.shared.services;
+
 import com.techservice.techservice.modules.account.domain.Account;
+import com.techservice.techservice.shared.enums.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -12,6 +14,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.UUID;
 
+import static io.jsonwebtoken.Jwts.claims;
+
 @Service
 public class JWTService {
     private final String secret;
@@ -21,16 +25,17 @@ public class JWTService {
     public JWTService(
             @Value("${JWT_SECRET}") String secret,
             @Value("${JWT_EXPIRATION}") Long expiration
-    ){
-        this.secret=secret;
-        this.expiration=expiration;
+    ) {
+        this.secret = secret;
+        this.expiration = expiration;
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(String id, String role){
+    public String generateToken(Account acc) {
         return Jwts.builder()
-                .subject(id)
-                .claim("role", role)
+                .subject(acc.getId().toString())
+                .claim("companyId", acc.getCompany().getId().toString())
+                .claim("role", acc.getRole().name())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(secretKey)
@@ -38,12 +43,16 @@ public class JWTService {
     }
 
     public TokenPayload validateTokenAndGetClaims(String token) throws JwtException, IllegalArgumentException {
-            Claims claims = Jwts.parser()
-                    .verifyWith(secretKey)
-                    .build()
-                    .parseSignedClaims(token)
-                    .getPayload();
+        Claims claims = Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
 
-            return new TokenPayload(UUID.fromString(claims.getSubject()), claims.get("role", String.class));
+        return new TokenPayload(
+                UUID.fromString(claims.getSubject()),
+                UUID.fromString(claims.get("companyId", String.class)),
+                Role.valueOf(claims.get("role", String.class))
+        );
     }
 }
