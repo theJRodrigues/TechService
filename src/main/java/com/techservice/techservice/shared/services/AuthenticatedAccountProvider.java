@@ -2,11 +2,13 @@ package com.techservice.techservice.shared.services;
 
 import com.techservice.techservice.config.security.AuthenticatedAccount;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 
-public final class AuthenticatedAccountProvider {
-    private AuthenticatedAccountProvider(){}
+@Component
+public  class AuthenticatedAccountProvider {
+    public AuthenticatedAccountProvider(){}
 
-    public static AuthenticatedAccount get(){
+    public AuthenticatedAccount get(){
         var auth = SecurityContextHolder.getContext().getAuthentication();
 
         if(auth == null || !(auth.getPrincipal() instanceof AuthenticatedAccount principal)){

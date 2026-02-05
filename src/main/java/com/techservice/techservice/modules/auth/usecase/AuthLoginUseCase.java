@@ -2,8 +2,8 @@ package com.techservice.techservice.modules.auth.usecase;
 
 import com.techservice.techservice.modules.account.domain.Account;
 import com.techservice.techservice.modules.auth.domain.AuthLoginRepository;
-import com.techservice.techservice.modules.auth.dto.AuthLoginRequest;
-import com.techservice.techservice.modules.auth.dto.AuthLoginRequestResponse;
+import com.techservice.techservice.modules.auth.dto.AuthLoginRequestDTO;
+import com.techservice.techservice.modules.auth.dto.AuthLoginResponseDTO;
 import com.techservice.techservice.shared.exceptions.InvalidCredentialsException;
 import com.techservice.techservice.shared.services.JWTService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,7 +21,7 @@ public class AuthLoginUseCase {
         jwtService = jwt;
     }
 
-    public AuthLoginRequestResponse execute(AuthLoginRequest dto){
+    public AuthLoginResponseDTO execute(AuthLoginRequestDTO dto){
         Account account = repository
                 .findByEmail(dto.email())
                 .orElseThrow(InvalidCredentialsException::new);
@@ -32,6 +32,6 @@ public class AuthLoginUseCase {
 
         String token = jwtService.generateToken(account);
 
-        return new AuthLoginRequestResponse(token);
+        return new AuthLoginResponseDTO(token);
     }
 }

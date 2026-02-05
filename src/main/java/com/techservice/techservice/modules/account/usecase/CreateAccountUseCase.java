@@ -3,8 +3,8 @@ package com.techservice.techservice.modules.account.usecase;
 import com.techservice.techservice.config.security.AuthenticatedAccount;
 import com.techservice.techservice.modules.account.domain.Account;
 import com.techservice.techservice.modules.account.domain.AccountRepository;
-import com.techservice.techservice.modules.account.dto.AccountResponseRequest;
-import com.techservice.techservice.modules.account.dto.CreateAccountRequest;
+import com.techservice.techservice.modules.account.dto.AccountResponseDTO;
+import com.techservice.techservice.modules.account.dto.CreateAccountRequestDTO;
 import com.techservice.techservice.modules.account.mapper.AccountMapper;
 import com.techservice.techservice.modules.company.domain.Company;
 import com.techservice.techservice.modules.company.domain.CompanyRepository;
@@ -19,19 +19,24 @@ public class CreateAccountUseCase {
     private final AccountRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final CompanyRepository companyRepository;
+    private final AuthenticatedAccountProvider authProvider;
 
-    public CreateAccountUseCase(AccountRepository repository, PasswordEncoder encoder, CompanyRepository companyRepository) {
+    public CreateAccountUseCase(AccountRepository repository,
+                                PasswordEncoder encoder,
+                                CompanyRepository companyRepository,
+                                AuthenticatedAccountProvider authProvider) {
         this.repository = repository;
         this.passwordEncoder = encoder;
         this.companyRepository = companyRepository;
+        this.authProvider = authProvider;
     }
 
-    public AccountResponseRequest execute(CreateAccountRequest accountDTO) {
+    public AccountResponseDTO execute(CreateAccountRequestDTO accountDTO) {
         if (repository.existsByEmail(accountDTO.email())) {
             throw new EmailAlreadyExistsException();
         }
 
-        AuthenticatedAccount auth = AuthenticatedAccountProvider.get();
+        AuthenticatedAccount auth = authProvider.get();
 
         Company company = companyRepository
                 .findById(auth.companyId())

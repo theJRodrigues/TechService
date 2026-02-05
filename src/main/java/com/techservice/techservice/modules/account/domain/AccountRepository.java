@@ -16,5 +16,7 @@ public interface AccountRepository {
     void deleteById(UUID id);
 
     Optional<Account> findByEmail(String email);
+
+    List<Account> findAllByCompanyId(UUID id);
 }
 

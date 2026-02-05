@@ -82,4 +82,15 @@ public class GlobalExceptionsHandler {
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ErrorResponse<?>> handleEntityNotFoundException(EntityNotFoundException ex){
+        ErrorResponse<String> error = new ErrorResponse<>(
+                HttpStatus.NOT_FOUND.value(),
+                "NOT_FOUND",
+                ex.getMessage()
+        );
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
 }

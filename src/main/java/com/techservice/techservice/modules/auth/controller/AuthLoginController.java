@@ -1,7 +1,7 @@
 package com.techservice.techservice.modules.auth.controller;
 
-import com.techservice.techservice.modules.auth.dto.AuthLoginRequest;
-import com.techservice.techservice.modules.auth.dto.AuthLoginRequestResponse;
+import com.techservice.techservice.modules.auth.dto.AuthLoginRequestDTO;
+import com.techservice.techservice.modules.auth.dto.AuthLoginResponseDTO;
 import com.techservice.techservice.modules.auth.usecase.AuthLoginUseCase;
 import com.techservice.techservice.shared.Routes.Routes;
 import jakarta.validation.Valid;
@@ -23,8 +23,8 @@ public class AuthLoginController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> execute(@Valid @RequestBody AuthLoginRequest dto){
-        AuthLoginRequestResponse token = useCase.execute(dto);
+    public ResponseEntity<Void> execute(@Valid @RequestBody AuthLoginRequestDTO dto){
+        AuthLoginResponseDTO token = useCase.execute(dto);
         ResponseCookie cookie = ResponseCookie.from("access_token", token.accessToken())
                 .httpOnly(true)
                 .secure(true)

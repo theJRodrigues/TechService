@@ -1,6 +1,6 @@
 package com.techservice.techservice.modules.auth.dto;
 
-public record AuthLoginRequestResponse(
+public record AuthLoginResponseDTO(
         String accessToken
 ) {
 }

@@ -1,7 +1,7 @@
 package com.techservice.techservice.modules.account.controller;
 
-import com.techservice.techservice.modules.account.dto.AccountResponseRequest;
-import com.techservice.techservice.modules.account.dto.CreateAccountRequest;
+import com.techservice.techservice.modules.account.dto.AccountResponseDTO;
+import com.techservice.techservice.modules.account.dto.CreateAccountRequestDTO;
 import com.techservice.techservice.modules.account.usecase.CreateAccountUseCase;
 import com.techservice.techservice.shared.Routes.Routes;
 import jakarta.validation.Valid;
@@ -25,8 +25,8 @@ public class CreateAccountController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<AccountResponseRequest> execute(@Valid @RequestBody CreateAccountRequest dto) {
-        AccountResponseRequest response = useCase.execute(dto);
+    public ResponseEntity<AccountResponseDTO> execute(@Valid @RequestBody CreateAccountRequestDTO dto) {
+        AccountResponseDTO response = useCase.execute(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

@@ -1,12 +1,12 @@
 package com.techservice.techservice.modules.account.mapper;
 
 import com.techservice.techservice.modules.account.domain.Account;
-import com.techservice.techservice.modules.account.dto.AccountResponseRequest;
-import com.techservice.techservice.modules.account.dto.CreateAccountRequest;
+import com.techservice.techservice.modules.account.dto.AccountResponseDTO;
+import com.techservice.techservice.modules.account.dto.CreateAccountRequestDTO;
 import com.techservice.techservice.modules.company.domain.Company;
 
 public class AccountMapper {
-    public static Account fromCreate(CreateAccountRequest dto, String hashedPassword, Company company){
+    public static Account fromCreate(CreateAccountRequestDTO dto, String hashedPassword, Company company){
         return new Account(
                 dto.name(),
                 dto.email(),
@@ -16,8 +16,8 @@ public class AccountMapper {
         );
     }
 
-    public static AccountResponseRequest toResponse(Account account){
-        return new AccountResponseRequest(
+    public static AccountResponseDTO toResponse(Account account){
+        return new AccountResponseDTO(
                 account.getId(),
                 account.getName(),
                 account.getEmail(),
