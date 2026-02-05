@@ -22,7 +22,7 @@ public class AuthLoginController {
         this.useCase = useCase;
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Void> execute(@Valid @RequestBody AuthLoginRequest dto){
         AuthLoginRequestResponse token = useCase.execute(dto);
         ResponseCookie cookie = ResponseCookie.from("access_token", token.accessToken())

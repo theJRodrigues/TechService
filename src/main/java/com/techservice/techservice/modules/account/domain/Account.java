@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -57,6 +56,8 @@ public class Account {
         this.role = role;
         this.company = company;
     }
+
+    public Account(){};
 
     public Company getCompany() {
         return company;

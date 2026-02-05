@@ -30,7 +30,7 @@ public class AuthLoginUseCase {
             throw new InvalidCredentialsException();
         };
 
-        String token = jwtService.generateToken(account.getId().toString(), account.getRole().name());
+        String token = jwtService.generateToken(account);
 
         return new AuthLoginRequestResponse(token);
     }

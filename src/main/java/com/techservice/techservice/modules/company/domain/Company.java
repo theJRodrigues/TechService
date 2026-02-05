@@ -36,6 +36,8 @@ public class Company {
         this.CNPJ = CNPJ;
     }
 
+    public Company(){};
+
     public Account createAdmin(String name, String email, String password) {
         return new Account(name, email, password, Role.ADMIN, this);
     }

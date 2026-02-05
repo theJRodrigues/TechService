@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public record AuthenticatedAccount(
         UUID id,
-        UUID companyID,
+        UUID companyId,
         Role role
 ) {
 }

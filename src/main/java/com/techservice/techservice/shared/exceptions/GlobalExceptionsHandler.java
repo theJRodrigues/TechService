@@ -13,19 +13,12 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionsHandler {
-    @ExceptionHandler(EmailAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse<?>> handleEmailAlreadyExists(EmailAlreadyExistsException ex){
 
-        ErrorResponse<String> error = new ErrorResponse<>(
-                HttpStatus.CONFLICT.value(),
-                "BUSINESS_RULE_VIOLATION",
-                ex.getMessage()
-        );
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
-    }
-
-    @ExceptionHandler(CNPJAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse<?>> handleCNPJAlreadyExists(CNPJAlreadyExistsException ex){
+    @ExceptionHandler({
+            CNPJAlreadyExistsException.class,
+            EmailAlreadyExistsException.class
+    })
+    public ResponseEntity<ErrorResponse<?>> handleCNPJAlreadyExists(RuntimeException ex){
 
         ErrorResponse<String> error = new ErrorResponse<>(
                 HttpStatus.CONFLICT.value(),
@@ -49,7 +42,7 @@ public class GlobalExceptionsHandler {
                 errorsMap
         );
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+        return ResponseEntity.badRequest().body(errors);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
@@ -77,5 +70,16 @@ public class GlobalExceptionsHandler {
                 errors
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(InvalidTokenContextException.class)
+    public ResponseEntity<ErrorResponse<?>> handleIllegalStateException(InvalidTokenContextException ex){
+        ErrorResponse<String> error = new ErrorResponse<>(
+                HttpStatus.UNAUTHORIZED.value(),
+                "INVALID_TOKEN_CONTEXT",
+                ex.getMessage()
+        );
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 }
