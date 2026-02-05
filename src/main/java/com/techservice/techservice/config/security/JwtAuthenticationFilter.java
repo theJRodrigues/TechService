@@ -1,6 +1,9 @@
 package com.techservice.techservice.config.security;
 
+import com.techservice.techservice.modules.account.domain.Account;
 import com.techservice.techservice.modules.account.domain.AccountRepository;
+import com.techservice.techservice.modules.company.domain.CompanyRepository;
+import com.techservice.techservice.shared.exceptions.InvalidTokenContextException;
 import com.techservice.techservice.shared.services.JWTService;
 import com.techservice.techservice.shared.services.TokenPayload;
 import io.jsonwebtoken.JwtException;
@@ -9,6 +12,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,10 +27,12 @@ import java.util.List;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JWTService jwtService;
     private final AccountRepository accountRepository;
+    private final CompanyRepository companyRepository;
 
-    public JwtAuthenticationFilter(JWTService service, AccountRepository repository) {
+    public JwtAuthenticationFilter(JWTService service, AccountRepository repository, CompanyRepository companyRepository) {
         this.jwtService = service;
         this.accountRepository = repository;
+        this.companyRepository = companyRepository;
     }
 
     @Override
@@ -40,23 +46,34 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 TokenPayload payload = jwtService.validateTokenAndGetClaims(token);
 
-                accountRepository.findById(payload.id())
-                        .ifPresent(acc -> {
-                            AuthenticatedAccount principal = new AuthenticatedAccount(
-                                    payload.id(),
-                                    payload.companyID(),
-                                    payload.role()
-                            );
+                Account account = accountRepository
+                        .findById(payload.id())
+                        .orElseThrow(() -> new AccessDeniedException("Invalid token context"));
 
-                            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                                    principal,
-                                    null,
-                                    List.of(new SimpleGrantedAuthority("ROLE_" + payload.role().name()))
-                            );
-                            SecurityContextHolder.getContext().setAuthentication(auth);
-                        });
+                if(!account.isActive()){
+                    throw new AccessDeniedException("Invalid token context");
+                }
+
+                if(!companyRepository.existsById(payload.companyID())){
+                    throw new AccessDeniedException("Invalid token context");
+                }
+
+                AuthenticatedAccount principal = new AuthenticatedAccount(
+                        payload.id(),
+                        payload.companyID(),
+                        payload.role()
+                );
+
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                        principal,
+                        null,
+                        List.of(new SimpleGrantedAuthority("ROLE_" + payload.role().name()))
+                );
+                SecurityContextHolder.getContext().setAuthentication(auth);
+
             } catch (JwtException | IllegalArgumentException e) {
                 SecurityContextHolder.clearContext();
+                throw e;
             }
         }
         filterChain.doFilter(request, response);

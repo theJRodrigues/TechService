@@ -16,11 +16,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final RestAuthEntryPoint restAuthEntryPoint;
+    private final RestAccessDeniedHandler restAccessDenied;
 
     public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
-                          RestAuthEntryPoint restAuthEntryPoint) {
+                          RestAuthEntryPoint restAuthEntryPoint, RestAccessDeniedHandler restAccessDenied) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.restAuthEntryPoint = restAuthEntryPoint;
+        this.restAccessDenied = restAccessDenied;
     }
 
     @Bean
@@ -30,7 +32,9 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint(restAuthEntryPoint))
+                        .authenticationEntryPoint(restAuthEntryPoint)
+                        .accessDeniedHandler(restAccessDenied)
+                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(Routes.AUTH + "/login", Routes.COMPANY).permitAll()
                         .anyRequest().authenticated()

@@ -1,7 +1,7 @@
 package com.techservice.techservice.modules.account.mapper;
 
 import com.techservice.techservice.modules.account.domain.Account;
-import com.techservice.techservice.modules.account.dto.AccountResponse;
+import com.techservice.techservice.modules.account.dto.AccountResponseRequest;
 import com.techservice.techservice.modules.account.dto.CreateAccountRequest;
 import com.techservice.techservice.modules.company.domain.Company;
 
@@ -16,8 +16,8 @@ public class AccountMapper {
         );
     }
 
-    public static AccountResponse toResponse(Account account){
-        return new AccountResponse(
+    public static AccountResponseRequest toResponse(Account account){
+        return new AccountResponseRequest(
                 account.getId(),
                 account.getName(),
                 account.getEmail(),

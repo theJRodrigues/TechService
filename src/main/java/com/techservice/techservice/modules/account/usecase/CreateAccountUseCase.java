@@ -3,7 +3,7 @@ package com.techservice.techservice.modules.account.usecase;
 import com.techservice.techservice.config.security.AuthenticatedAccount;
 import com.techservice.techservice.modules.account.domain.Account;
 import com.techservice.techservice.modules.account.domain.AccountRepository;
-import com.techservice.techservice.modules.account.dto.AccountResponse;
+import com.techservice.techservice.modules.account.dto.AccountResponseRequest;
 import com.techservice.techservice.modules.account.dto.CreateAccountRequest;
 import com.techservice.techservice.modules.account.mapper.AccountMapper;
 import com.techservice.techservice.modules.company.domain.Company;
@@ -26,7 +26,7 @@ public class CreateAccountUseCase {
         this.companyRepository = companyRepository;
     }
 
-    public AccountResponse execute(CreateAccountRequest accountDTO) {
+    public AccountResponseRequest execute(CreateAccountRequest accountDTO) {
         if (repository.existsByEmail(accountDTO.email())) {
             throw new EmailAlreadyExistsException();
         }

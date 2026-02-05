@@ -5,7 +5,7 @@ import com.techservice.techservice.shared.enums.Role;
 import java.time.Instant;
 import java.util.UUID;
 
-public record AccountResponse(
+public record AccountResponseRequest(
         UUID id,
         String name,
         String email,

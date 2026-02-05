@@ -8,5 +8,6 @@ public interface CompanyRepository {
     Company save(Company company);
     Optional<Company> findById(UUID id);
     boolean existsByCNPJ(String CNPJ);
+    boolean existsById(UUID id);
     void deleteById(UUID id);
 }
