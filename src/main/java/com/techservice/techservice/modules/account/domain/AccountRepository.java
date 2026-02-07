@@ -7,16 +7,12 @@ import java.util.UUID;
 public interface AccountRepository {
     Account save(Account account);
 
+    boolean existsByEmailAndCompanyId(String email, UUID companyId);
+
     boolean existsByEmail(String email);
 
-    List<Account> findAll();
+    Optional<Account> findByIdAndCompanyId(UUID id, UUID companyId);
 
-    Optional<Account> findById(UUID id);
-
-    void deleteById(UUID id);
-
-    Optional<Account> findByEmail(String email);
-
-    List<Account> findAllByCompanyId(UUID id);
+    List<Account> findAllByCompanyIdAndIsActiveTrue(UUID companyId);
 }
 

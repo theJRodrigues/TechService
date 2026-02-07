@@ -3,7 +3,6 @@ package com.techservice.techservice.config.security;
 import com.techservice.techservice.modules.account.domain.Account;
 import com.techservice.techservice.modules.account.domain.AccountRepository;
 import com.techservice.techservice.modules.company.domain.CompanyRepository;
-import com.techservice.techservice.shared.exceptions.InvalidTokenContextException;
 import com.techservice.techservice.shared.services.JWTService;
 import com.techservice.techservice.shared.services.TokenPayload;
 import io.jsonwebtoken.JwtException;
@@ -47,7 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 TokenPayload payload = jwtService.validateTokenAndGetClaims(token);
 
                 Account account = accountRepository
-                        .findById(payload.id())
+                        .findByIdAndCompanyId(payload.id(), payload.companyID())
                         .orElseThrow(() -> new AccessDeniedException("Invalid token context"));
 
                 if(!account.isActive()){

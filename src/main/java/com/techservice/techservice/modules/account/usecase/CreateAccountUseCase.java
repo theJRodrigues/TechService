@@ -32,12 +32,11 @@ public class CreateAccountUseCase {
     }
 
     public AccountResponseDTO execute(CreateAccountRequestDTO accountDTO) {
-        if (repository.existsByEmail(accountDTO.email())) {
-            throw new BusinessRuleException("Email already exists");
-        }
-
         AuthenticatedAccount auth = authProvider.get();
 
+        if (repository.existsByEmailAndCompanyId(accountDTO.email(), auth.companyId())) {
+            throw new BusinessRuleException("Email already exists");
+        }
         Company company = companyRepository
                 .findById(auth.companyId())
                 .orElseThrow(InvalidTokenContextException::new);

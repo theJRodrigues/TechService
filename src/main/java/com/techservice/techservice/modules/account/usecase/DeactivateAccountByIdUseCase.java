@@ -25,14 +25,12 @@ public class DeactivateAccountByIdUseCase {
 
     @Transactional
     public void execute(UUID id) {
-        Account account = repository.findById(id)
-                .orElseThrow(() -> new NotFoundException("The Account could not be found"));
+
 
         AuthenticatedAccount auth = authProvider.get();
 
-        if (!account.getCompany().getId().equals(auth.companyId())) {
-            throw new ForbiddenException("You do not have permission to manage accounts from another company");
-        }
+        Account account = repository.findByIdAndCompanyId(id, auth.companyId())
+                .orElseThrow(() -> new NotFoundException("The Account could not be found"));
 
         if (!account.isActive()) {
             throw new BusinessRuleException("Account is already inactive");

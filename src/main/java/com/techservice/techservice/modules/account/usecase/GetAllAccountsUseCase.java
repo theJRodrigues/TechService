@@ -23,7 +23,7 @@ public class GetAllAccountsUseCase {
 
     public List<AccountResponseDTO> execute(){
         AuthenticatedAccount auth = authProvider.get();
-        List<Account> accounts = repository.findAllByCompanyId(auth.companyId());
+        List<Account> accounts = repository.findAllByCompanyIdAndIsActiveTrue(auth.companyId());
 
         return accounts.stream().map(AccountMapper::toResponse).toList();
     }
