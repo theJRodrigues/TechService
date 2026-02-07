@@ -15,7 +15,8 @@ public class GetAllAccountsUseCase {
     private final AccountRepository repository;
     private final AuthenticatedAccountProvider authProvider;
 
-    public GetAllAccountsUseCase(AccountRepository repository, AuthenticatedAccountProvider authProvider) {
+    public GetAllAccountsUseCase(AccountRepository repository,
+                                 AuthenticatedAccountProvider authProvider) {
         this.repository = repository;
         this.authProvider = authProvider;
     }

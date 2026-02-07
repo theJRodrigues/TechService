@@ -8,7 +8,7 @@ import com.techservice.techservice.modules.account.dto.CreateAccountRequestDTO;
 import com.techservice.techservice.modules.account.mapper.AccountMapper;
 import com.techservice.techservice.modules.company.domain.Company;
 import com.techservice.techservice.modules.company.domain.CompanyRepository;
-import com.techservice.techservice.shared.exceptions.EmailAlreadyExistsException;
+import com.techservice.techservice.shared.exceptions.BusinessRuleException;
 import com.techservice.techservice.shared.exceptions.InvalidTokenContextException;
 import com.techservice.techservice.shared.services.AuthenticatedAccountProvider;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,7 +33,7 @@ public class CreateAccountUseCase {
 
     public AccountResponseDTO execute(CreateAccountRequestDTO accountDTO) {
         if (repository.existsByEmail(accountDTO.email())) {
-            throw new EmailAlreadyExistsException();
+            throw new BusinessRuleException("Email already exists");
         }
 
         AuthenticatedAccount auth = authProvider.get();

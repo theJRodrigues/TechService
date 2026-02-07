@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,11 +15,8 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionsHandler {
 
-    @ExceptionHandler({
-            CNPJAlreadyExistsException.class,
-            EmailAlreadyExistsException.class
-    })
-    public ResponseEntity<ErrorResponse<?>> handleCNPJAlreadyExists(RuntimeException ex){
+    @ExceptionHandler(BusinessRuleException.class)
+    public ResponseEntity<ErrorResponse<?>> handleCNPJAlreadyExists(BusinessRuleException ex){
 
         ErrorResponse<String> error = new ErrorResponse<>(
                 HttpStatus.CONFLICT.value(),
@@ -26,6 +24,16 @@ public class GlobalExceptionsHandler {
                 ex.getMessage()
         );
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ErrorResponse<?>> handleForbiddenException(ForbiddenException ex){
+        ErrorResponse<String> error = new ErrorResponse<>(
+                HttpStatus.FORBIDDEN.value(),
+                "FORBIDDEN",
+                ex.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -83,8 +91,18 @@ public class GlobalExceptionsHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<ErrorResponse<?>> handleEntityNotFoundException(EntityNotFoundException ex){
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse<?>> handleMisMatchException(MethodArgumentNotValidException ex){
+        ErrorResponse<String> error = new ErrorResponse<>(
+                HttpStatus.BAD_REQUEST.value(),
+                "INVALID_ARGUMENT",
+                ex.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse<?>> handleEntityNotFoundException(NotFoundException ex){
         ErrorResponse<String> error = new ErrorResponse<>(
                 HttpStatus.NOT_FOUND.value(),
                 "NOT_FOUND",

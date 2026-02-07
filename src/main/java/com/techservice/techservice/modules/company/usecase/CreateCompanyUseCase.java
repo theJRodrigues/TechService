@@ -7,10 +7,9 @@ import com.techservice.techservice.modules.company.domain.CompanyRepository;
 import com.techservice.techservice.modules.company.dto.CompanyResponseRequest;
 import com.techservice.techservice.modules.company.dto.CreateCompanyRequest;
 import com.techservice.techservice.modules.company.mapper.CompanyMapper;
-import com.techservice.techservice.shared.enums.Role;
-import com.techservice.techservice.shared.exceptions.CNPJAlreadyExistsException;
-import com.techservice.techservice.shared.exceptions.EmailAlreadyExistsException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import com.techservice.techservice.shared.exceptions.BusinessRuleException;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,9 +20,7 @@ public class CreateCompanyUseCase {
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public CreateCompanyUseCase(CompanyRepository repository,
-                                AccountRepository accountRepository,
-                                PasswordEncoder encoder) {
+    public CreateCompanyUseCase(CompanyRepository repository, AccountRepository accountRepository, PasswordEncoder encoder) {
         this.repository = repository;
         this.accountRepository = accountRepository;
         this.passwordEncoder = encoder;
@@ -32,22 +29,18 @@ public class CreateCompanyUseCase {
     @Transactional
     public CompanyResponseRequest execute(CreateCompanyRequest dto) {
         if (accountRepository.existsByEmail(dto.adminEmail())) {
-            throw new EmailAlreadyExistsException();
+            throw new BusinessRuleException("Email already exists");
         }
 
         if (repository.existsByCNPJ(dto.CNPJ())) {
-            throw new CNPJAlreadyExistsException();
+            throw new BusinessRuleException("CNPJ Already exists");
         }
 
         Company company = CompanyMapper.toEntity(dto);
         Company savedCompany = repository.save(company);
 
         String hashedPassword = passwordEncoder.encode(dto.adminPassword());
-        Account admAccount = savedCompany.createAdmin(
-                dto.adminName(),
-                dto.adminEmail(),
-                hashedPassword
-        );
+        Account admAccount = savedCompany.createAdmin(dto.adminName(), dto.adminEmail(), hashedPassword);
 
         accountRepository.save(admAccount);
 
