@@ -43,9 +43,14 @@ public class CreateAccountUseCase {
 
         String hashedPassword = passwordEncoder.encode(accountDTO.password());
 
-        Account newAccount = AccountMapper.fromCreate(accountDTO, hashedPassword, company);
+        Account newAccount = Account.create(accountDTO.name(),
+                accountDTO.email(),
+                hashedPassword,
+                accountDTO.role(),
+                company);
 
         Account response = repository.save(newAccount);
+
         return AccountMapper.toResponse(response);
     }
 }

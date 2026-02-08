@@ -49,15 +49,22 @@ public class Account {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-    public Account(String name, String email, String password, Role role, Company company) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.company = company;
+    public static Account create(String name,
+                                 String email,
+                                 String hashedPassword,
+                                 Role role,
+                                 Company company) {
+        Account acc = new Account();
+        acc.name = name;
+        acc.email = email;
+        acc.password = hashedPassword;
+        acc.role = role;
+        acc.company = company;
+
+        return acc;
     }
 
-    public Account(){};
+    protected Account(){};
 
     public Company getCompany() {
         return company;

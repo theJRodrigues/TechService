@@ -22,7 +22,7 @@ public class DeactivateAccountByIdController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("/{id}")
+    @PatchMapping("/{id}/deactivate")
     public ResponseEntity<Void> execute(@PathVariable UUID id){
         useCase.execute(id);
         return ResponseEntity.noContent().build();
