@@ -92,11 +92,11 @@ public class GlobalExceptionsHandler {
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<ErrorResponse<?>> handleMisMatchException(MethodArgumentNotValidException ex){
+    public ResponseEntity<ErrorResponse<?>> handleMisMatchException(MethodArgumentTypeMismatchException ex){
         ErrorResponse<String> error = new ErrorResponse<>(
                 HttpStatus.BAD_REQUEST.value(),
                 "INVALID_ARGUMENT",
-                ex.getMessage()
+                "Invalid valur for parameter  " + ex.getName()
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
