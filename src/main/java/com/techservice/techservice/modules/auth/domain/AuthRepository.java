@@ -4,6 +4,6 @@ import com.techservice.techservice.modules.account.domain.Account;
 
 import java.util.Optional;
 
-public interface AuthLoginRepository {
+public interface AuthRepository {
     Optional<Account> findByEmail(String email);
 }

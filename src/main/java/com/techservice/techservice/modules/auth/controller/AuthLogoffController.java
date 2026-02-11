@@ -14,12 +14,25 @@ public class AuthLogoffController {
 
     @PostMapping
     public ResponseEntity<Void> execute(){
-        ResponseCookie cookie = ResponseCookie.from("access_token", null)
+        ResponseCookie jwtCookie = ResponseCookie.from("access_token", "")
                 .secure(true)
                 .httpOnly(true)
                 .sameSite("Strict")
                 .path("/")
+                .maxAge(0)
                 .build();
-        return ResponseEntity.noContent().header(HttpHeaders.SET_COOKIE, cookie.toString()).build();
+
+        ResponseCookie refreshCookie = ResponseCookie.from("refresh_token", "")
+                .secure(true)
+                .httpOnly(true)
+                .sameSite("Strict")
+                .path(Routes.AUTH + "/refresh")
+                .maxAge(0)
+                .build();
+
+        return ResponseEntity.noContent()
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
+                .build();
     }
 }

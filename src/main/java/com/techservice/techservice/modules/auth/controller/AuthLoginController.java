@@ -25,14 +25,22 @@ public class AuthLoginController {
     @PostMapping
     public ResponseEntity<Void> execute(@Valid @RequestBody AuthLoginRequestDTO dto){
         AuthLoginResponseDTO token = useCase.execute(dto);
-        ResponseCookie cookie = ResponseCookie.from("access_token", token.accessToken())
+        ResponseCookie jwtCookie = ResponseCookie.from("access_token", token.accessToken())
                 .httpOnly(true)
                 .secure(true)
                 .sameSite("Strict")
                 .path("/")
                 .build();
+        ResponseCookie refreshCookie = ResponseCookie.from("refresh_token", token.refreshToken())
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("Strict")
+                .path(Routes.AUTH + "/refresh")
+                .build();
 
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
                 .build();
     }
 

@@ -91,6 +91,17 @@ public class GlobalExceptionsHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 
+    @ExceptionHandler(InfrastructureException.class)
+    public ResponseEntity<ErrorResponse<?>> handleInfrastructureException(InfrastructureException ex){
+        ErrorResponse<String> error = new ErrorResponse<>(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "INTERNAL_SERVER_ERROR",
+                "Internal server error"
+        );
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ErrorResponse<?>> handleMisMatchException(MethodArgumentTypeMismatchException ex){
         ErrorResponse<String> error = new ErrorResponse<>(

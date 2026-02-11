@@ -1,24 +1,33 @@
 package com.techservice.techservice.modules.auth.usecase;
 
 import com.techservice.techservice.modules.account.domain.Account;
-import com.techservice.techservice.modules.auth.domain.AuthLoginRepository;
+import com.techservice.techservice.modules.auth.domain.AuthRepository;
+import com.techservice.techservice.modules.auth.domain.RefreshToken;
+import com.techservice.techservice.modules.auth.domain.RefreshTokenRepository;
 import com.techservice.techservice.modules.auth.dto.AuthLoginRequestDTO;
 import com.techservice.techservice.modules.auth.dto.AuthLoginResponseDTO;
 import com.techservice.techservice.shared.exceptions.InvalidCredentialsException;
 import com.techservice.techservice.shared.services.JWTService;
+import com.techservice.techservice.shared.services.RefreshTokenService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+
 @Service
 public class AuthLoginUseCase {
-    private final AuthLoginRepository repository;
+    private final AuthRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
+    private final RefreshTokenRepository rtRepository;
+    private final RefreshTokenService rtService;
 
-    public AuthLoginUseCase(AuthLoginRepository repository, PasswordEncoder encoder, JWTService jwt){
+    public AuthLoginUseCase(AuthRepository repository, PasswordEncoder encoder, JWTService jwt, RefreshTokenRepository rtRepository, RefreshTokenService rtService){
         this.repository = repository;
         this.passwordEncoder = encoder;
-        jwtService = jwt;
+        this.jwtService = jwt;
+        this.rtRepository = rtRepository;
+        this.rtService = rtService;
     }
 
     public AuthLoginResponseDTO execute(AuthLoginRequestDTO dto){
@@ -30,8 +39,19 @@ public class AuthLoginUseCase {
             throw new InvalidCredentialsException();
         };
 
-        String token = jwtService.generateToken(account);
+        String jwtToken = jwtService.generateToken(account);
+        String rawRT = rtService.generateRawToken();
+        String hashRT = rtService.hash(rawRT);
 
-        return new AuthLoginResponseDTO(token);
+        RefreshToken refreshToken = RefreshToken.create(
+                account.getId(),
+                hashRT,
+                Duration.ofDays(30)
+        );
+
+        RefreshToken newRT = rtRepository.save(refreshToken);
+
+
+        return new AuthLoginResponseDTO(jwtToken, newRT.getTokenHash());
     }
 }
