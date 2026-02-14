@@ -6,13 +6,11 @@ import com.techservice.techservice.modules.auth.domain.RefreshToken;
 import com.techservice.techservice.modules.auth.domain.RefreshTokenRepository;
 import com.techservice.techservice.modules.auth.dto.AuthLoginRequestDTO;
 import com.techservice.techservice.modules.auth.dto.AuthLoginResponseDTO;
+import com.techservice.techservice.modules.auth.services.RefreshTokenService;
 import com.techservice.techservice.shared.exceptions.InvalidCredentialsException;
 import com.techservice.techservice.shared.services.JWTService;
-import com.techservice.techservice.shared.services.RefreshTokenService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.time.Duration;
 
 @Service
 public class AuthLoginUseCase {
@@ -39,19 +37,20 @@ public class AuthLoginUseCase {
             throw new InvalidCredentialsException();
         };
 
-        String jwtToken = jwtService.generateToken(account);
+        String jwtToken = jwtService.generateToken(account.getId(), account.getCompany().getId(), account.getRole());
         String rawRT = rtService.generateRawToken();
         String hashRT = rtService.hash(rawRT);
 
         RefreshToken refreshToken = RefreshToken.create(
                 account.getId(),
-                hashRT,
-                Duration.ofDays(30)
+                account.getCompany().getId(),
+                account.getRole(),
+                hashRT
         );
 
         RefreshToken newRT = rtRepository.save(refreshToken);
 
 
-        return new AuthLoginResponseDTO(jwtToken, newRT.getTokenHash());
+        return new AuthLoginResponseDTO(jwtToken, rawRT);
     }
 }

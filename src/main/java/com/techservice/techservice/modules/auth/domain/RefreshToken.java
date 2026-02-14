@@ -1,5 +1,6 @@
 package com.techservice.techservice.modules.auth.domain;
 
+import com.techservice.techservice.shared.enums.Role;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -17,6 +18,13 @@ public class RefreshToken {
     @Column(nullable = false, name = "account_id")
     private UUID accountId;
 
+    @Column(nullable = false, name = "company_id")
+    private UUID companyId;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @Column(nullable = false, unique = true, name = "token_hash")
     private String tokenHash;
 
@@ -30,27 +38,41 @@ public class RefreshToken {
     @CreationTimestamp
     private Instant createdAt;
 
-    protected RefreshToken(){}
+    protected RefreshToken() {
+    }
 
-    public static RefreshToken create(UUID accountId, String token, Duration ttl){
+    public static RefreshToken create(UUID accountId,
+                                      UUID companyId,
+                                      Role role,
+                                      String tokenHash) {
         RefreshToken rt = new RefreshToken();
         rt.accountId = accountId;
-        rt.tokenHash = token;
-        rt.expiresAt = Instant.now().plus(ttl);
+        rt.companyId = companyId;
+        rt.role = role;
+        rt.tokenHash = tokenHash;
+        rt.expiresAt = Instant.now().plus(Duration.ofDays(30));
 
         return rt;
     }
 
-    public boolean isExpired(){
+    public boolean isExpired() {
         return Instant.now().isAfter(expiresAt);
     }
 
-    public boolean isValid(){
+    public boolean isValid() {
         return !revoked && !isExpired();
     }
 
-    public void revoke(){
+    public void revoke() {
         this.revoked = true;
+    }
+
+    public UUID getCompanyId() {
+        return companyId;
+    }
+
+    public Role getRole() {
+        return role;
     }
 
     public UUID getId() {

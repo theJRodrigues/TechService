@@ -14,5 +14,7 @@ public interface AccountRepository {
     Optional<Account> findByIdAndCompanyId(UUID id, UUID companyId);
 
     List<Account> findAllByCompanyIdAndIsActiveTrue(UUID companyId);
+
+    boolean existsByIdAndIsActiveTrue(UUID id);
 }
 

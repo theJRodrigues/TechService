@@ -31,11 +31,11 @@ public class JWTService {
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(Account acc) {
+    public String generateToken(UUID id, UUID companyId, Role role){
         return Jwts.builder()
-                .subject(acc.getId().toString())
-                .claim("companyId", acc.getCompany().getId().toString())
-                .claim("role", acc.getRole().name())
+                .subject(id.toString())
+                .claim("companyId", companyId.toString())
+                .claim("role", role.name())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(secretKey)

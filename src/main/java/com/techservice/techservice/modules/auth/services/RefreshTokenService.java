@@ -1,4 +1,4 @@
-package com.techservice.techservice.shared.services;
+package com.techservice.techservice.modules.auth.services;
 
 import com.techservice.techservice.shared.exceptions.InfrastructureException;
 import org.springframework.stereotype.Service;

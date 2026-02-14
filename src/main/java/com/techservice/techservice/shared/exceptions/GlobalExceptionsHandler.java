@@ -91,6 +91,17 @@ public class GlobalExceptionsHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 
+    @ExceptionHandler(InvalidRefreshTokenException.class)
+    public ResponseEntity<ErrorResponse<?>> handleInvalidRefreshTokenExpcetion(InvalidRefreshTokenException ex){
+        ErrorResponse<String> error = new ErrorResponse<>(
+                HttpStatus.UNAUTHORIZED.value(),
+                "INVALID_REFRESH_TOKEN",
+                ex.getMessage()
+        );
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
     @ExceptionHandler(InfrastructureException.class)
     public ResponseEntity<ErrorResponse<?>> handleInfrastructureException(InfrastructureException ex){
         ErrorResponse<String> error = new ErrorResponse<>(
@@ -107,7 +118,7 @@ public class GlobalExceptionsHandler {
         ErrorResponse<String> error = new ErrorResponse<>(
                 HttpStatus.BAD_REQUEST.value(),
                 "INVALID_ARGUMENT",
-                "Invalid valur for parameter  " + ex.getName()
+                "Invalid value for parameter  " + ex.getName()
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
