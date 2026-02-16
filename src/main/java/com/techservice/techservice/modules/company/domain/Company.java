@@ -36,49 +36,22 @@ public class Company {
         this.CNPJ = CNPJ;
     }
 
-    public Company(){};
+    protected Company(){};
 
-    public Account createAdmin(String name, String email, String password) {
-        return Account.create(name, email, password, Role.ADMIN, this);
+    public Account createAdmin(String name,
+                               String email,
+                               String password) {
+        return Account
+                .create(name,
+                email,
+                password,
+                Role.ADMIN,
+                this);
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCNPJ() {
-        return CNPJ;
-    }
-
-    public void setCNPJ(String CNPJ) {
-        this.CNPJ = CNPJ;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Instant updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+    public UUID getId() {return id;}
+    public String getName() {return name;}
+    public String getCNPJ() {return CNPJ;}
+    public Instant getCreatedAt() {return createdAt;}
+    public Instant getUpdatedAt() {return updatedAt;}
 }

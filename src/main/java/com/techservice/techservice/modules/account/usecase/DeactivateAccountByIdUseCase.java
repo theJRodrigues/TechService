@@ -25,8 +25,6 @@ public class DeactivateAccountByIdUseCase {
 
     @Transactional
     public void execute(UUID id) {
-
-
         AuthenticatedAccount auth = authProvider.get();
 
         Account account = repository.findByIdAndCompanyId(id, auth.companyId())

@@ -38,8 +38,7 @@ public class RefreshToken {
     @CreationTimestamp
     private Instant createdAt;
 
-    protected RefreshToken() {
-    }
+    protected RefreshToken() {}
 
     public static RefreshToken create(UUID accountId,
                                       UUID companyId,
@@ -55,47 +54,16 @@ public class RefreshToken {
         return rt;
     }
 
-    public boolean isExpired() {
-        return Instant.now().isAfter(expiresAt);
-    }
+    public boolean isExpired() {return Instant.now().isAfter(expiresAt);}
+    public boolean isValid() {return !revoked && !isExpired();}
+    public void revoke() {this.revoked = true;}
+    public UUID getCompanyId() {return companyId;}
 
-    public boolean isValid() {
-        return !revoked && !isExpired();
-    }
-
-    public void revoke() {
-        this.revoked = true;
-    }
-
-    public UUID getCompanyId() {
-        return companyId;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public UUID getAccountId() {
-        return accountId;
-    }
-
-    public String getTokenHash() {
-        return tokenHash;
-    }
-
-    public Instant getExpiresAt() {
-        return expiresAt;
-    }
-
-    public boolean isRevoked() {
-        return revoked;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
+    public Role getRole() {return role;}
+    public UUID getId() {return id;}
+    public UUID getAccountId() {return accountId;}
+    public String getTokenHash() {return tokenHash;}
+    public Instant getExpiresAt() {return expiresAt;}
+    public boolean isRevoked() {return revoked;}
+    public Instant getCreatedAt() {return createdAt;}
 }
