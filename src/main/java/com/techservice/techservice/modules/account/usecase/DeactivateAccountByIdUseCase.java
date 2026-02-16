@@ -27,13 +27,10 @@ public class DeactivateAccountByIdUseCase {
     public void execute(UUID id) {
         AuthenticatedAccount auth = authProvider.get();
 
-        Account account = repository.findByIdAndCompanyId(id, auth.companyId())
+        Account account = repository
+                .findByIdAndCompanyId(id, auth.companyId())
                 .orElseThrow(() -> new NotFoundException("The Account could not be found"));
 
-        if (!account.isActive()) {
-            throw new BusinessRuleException("Account is already inactive");
-        }
-
-        account.setActive(false);
+        account.deactivate();
     }
 }

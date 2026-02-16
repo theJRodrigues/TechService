@@ -2,6 +2,7 @@ package com.techservice.techservice.modules.account.domain;
 
 import com.techservice.techservice.modules.company.domain.Company;
 import com.techservice.techservice.shared.enums.Role;
+import com.techservice.techservice.shared.exceptions.BusinessRuleException;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -71,6 +72,12 @@ public class Account {
         if (email != null) this.email = email;
     }
 
+    public void deactivate(){
+        if (!this.isActive())
+            throw new BusinessRuleException("Account is already inactive");
+
+        this.isActive = false;
+    }
     public UUID getId() {return id;}
     public String getName() {return name;}
     public String getEmail() {return email;}
