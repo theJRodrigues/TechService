@@ -2,6 +2,8 @@ package com.techservice.techservice.shared.valueObjects;
 
 import com.techservice.techservice.shared.exceptions.BusinessRuleException;
 import jakarta.persistence.Embeddable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Embeddable
 public class Address {
@@ -14,13 +16,14 @@ public class Address {
 
     protected Address(){}
 
-    public Address(String zipCode,
-                   String street,
-                   String number,
-                   String neighborhood,
-                   String city,
-                   String complement) {
+    public Address(@NotNull String zipCode,
+                   @NotNull String street,
+                   @NotNull String number,
+                   @Nullable String neighborhood,
+                   @Nullable String city,
+                   @Nullable String complement) {
         String normalizedCep = normalizedCep(zipCode);
+
         if(normalizedCep.length() != 8)
             throw new BusinessRuleException("Invalid CEP");
 
@@ -33,9 +36,9 @@ public class Address {
         this.zipCode = normalizedCep;
         this.street = street.trim();
         this.number = number.trim();
-        this.neighborhood = neighborhood;
-        this.city = city;
-        this.complement = complement;
+        this.neighborhood = neighborhood != null ? neighborhood.trim() : null;
+        this.city = city != null ? city.trim() : null;
+        this.complement = complement != null ? complement.trim() : null;
     }
 
     private String normalizedCep(String zipCode){
@@ -43,11 +46,11 @@ public class Address {
         return zipCode.trim().replaceAll("[^0-9]", "");
     }
 
-    public String getZipCode() {return zipCode;}
-    public String getStreet() {return street;}
-    public String getNumber() {return number;}
-    public String getNeighborhood() {return neighborhood;}
-    public String getCity() {return city;}
-    public String getComplement() {return complement;}
+    @NotNull public String getZipCode() {return zipCode;}
+    @NotNull public String getStreet() {return street;}
+    @NotNull public String getNumber() {return number;}
+    @Nullable public String getNeighborhood() {return neighborhood;}
+    @Nullable public String getCity() {return city;}
+    @Nullable public String getComplement() {return complement;}
 
 }
