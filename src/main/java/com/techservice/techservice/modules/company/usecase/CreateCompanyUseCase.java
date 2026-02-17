@@ -4,7 +4,6 @@ import com.techservice.techservice.modules.account.domain.Account;
 import com.techservice.techservice.modules.account.domain.AccountRepository;
 import com.techservice.techservice.modules.company.domain.Company;
 import com.techservice.techservice.modules.company.domain.CompanyRepository;
-import com.techservice.techservice.modules.company.dto.CompanyResponseRequest;
 import com.techservice.techservice.modules.company.dto.CreateCompanyRequest;
 import com.techservice.techservice.modules.company.mapper.CompanyMapper;
 
@@ -27,7 +26,7 @@ public class CreateCompanyUseCase {
     }
 
     @Transactional
-    public CompanyResponseRequest execute(CreateCompanyRequest dto) {
+    public void execute(CreateCompanyRequest dto) {
         if (accountRepository.existsByEmail(dto.adminEmail())) {
             throw new BusinessRuleException("Email already exists");
         }
@@ -43,8 +42,6 @@ public class CreateCompanyUseCase {
         Account admAccount = savedCompany.createAdmin(dto.adminName(), dto.adminEmail(), hashedPassword);
 
         accountRepository.save(admAccount);
-
-        return new CompanyResponseRequest(savedCompany.getId(), savedCompany.getName());
     }
 
 }

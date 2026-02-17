@@ -1,6 +1,5 @@
 package com.techservice.techservice.modules.company.controller;
 
-import com.techservice.techservice.modules.company.dto.CompanyResponseRequest;
 import com.techservice.techservice.modules.company.dto.CreateCompanyRequest;
 import com.techservice.techservice.modules.company.usecase.CreateCompanyUseCase;
 import com.techservice.techservice.shared.Routes.Routes;
@@ -22,9 +21,8 @@ public class CreateCompanyController {
     }
 
     @PostMapping
-    public ResponseEntity<CompanyResponseRequest> execute(@Valid @RequestBody CreateCompanyRequest dto) {
-        CompanyResponseRequest response = useCase.execute(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-
+    public ResponseEntity<Void> execute(@Valid @RequestBody CreateCompanyRequest dto) {
+        useCase.execute(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
