@@ -6,6 +6,7 @@ import com.techservice.techservice.shared.exceptions.BusinessRuleException;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -52,11 +53,18 @@ public class Account {
 
     protected Account() {}
 
-    public static Account create(String name,
-                                 String email,
-                                 String hashedPassword,
-                                 Role role,
-                                 Company company) {
+    public static Account create(@NotNull String name,
+                                 @NotNull String email,
+                                 @NotNull String hashedPassword,
+                                 @NotNull Role role,
+                                 @NotNull Company company) {
+
+        validateNonEmpty(name, "Name");
+        validateNonEmpty(email, "Email");
+        validateNonEmpty(hashedPassword, "Password");
+        validateNonNull(role, "Role");
+        validateNonNull(company, "Company");
+
         Account acc = new Account();
         acc.name = name;
         acc.email = email;
@@ -65,6 +73,16 @@ public class Account {
         acc.company = company;
 
         return acc;
+    }
+
+    private static void validateNonEmpty(String value, String field){
+        if (value == null || value.trim().isEmpty())
+            throw new BusinessRuleException(field + " must not be empty");
+    }
+
+    private static void validateNonNull  ( Object value, String field){
+        if(value == null)
+            throw new BusinessRuleException(field + " must not be null");
     }
 
     public void update(String name, String email) {
@@ -78,13 +96,13 @@ public class Account {
 
         this.isActive = false;
     }
-    public UUID getId() {return id;}
-    public String getName() {return name;}
-    public String getEmail() {return email;}
-    public String getPassword() {return password;}
+    @NotNull public UUID getId() {return id;}
+    @NotNull public String getName() {return name;}
+    @NotNull public String getEmail() {return email;}
+    @NotNull public String getPassword() {return password;}
     public boolean isActive() {return isActive;}
-    public Role getRole() {return role;}
-    public Company getCompany() {return company;}
-    public Instant getCreatedAt() {return createdAt;}
-    public Instant getUpdatedAt() {return updatedAt;}
+    @NotNull public Role getRole() {return role;}
+    @NotNull public Company getCompany() {return company;}
+    @NotNull public Instant getCreatedAt() {return createdAt;}
+    @NotNull public Instant getUpdatedAt() {return updatedAt;}
 }
