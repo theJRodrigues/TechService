@@ -14,17 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(Routes.CLIENT)
-public class CreateClientController {
+public class ClientController {
     private final CreateClientUseCase useCase;
 
-    public CreateClientController(CreateClientUseCase useCase) {
+    public ClientController(CreateClientUseCase useCase) {
         this.useCase = useCase;
     }
 
     @PostMapping
     public ResponseEntity<ClientResponseDTO> execute(@RequestBody @Valid CreateClientRequestDTO dto){
         ClientResponseDTO newClient = useCase.execute(dto);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(newClient);
     }
 }
