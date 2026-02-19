@@ -22,18 +22,16 @@ public class Address {
                    @Nullable String neighborhood,
                    @Nullable String city,
                    @Nullable String complement) {
-        String normalizedCep = normalizedCep(zipCode);
 
-        if(normalizedCep.length() != 8)
-            throw new BusinessRuleException("Invalid CEP");
+        validateNonEmpty(zipCode, "zipCode");
+        validateNonEmpty(street, "Street");
+        validateNonEmpty(number, "Number");
 
-        if(street == null || street.trim().isEmpty())
-            throw new BusinessRuleException("Street must not be empty");
-
-        if(number == null || number.trim().isEmpty())
-            throw new BusinessRuleException("House number must not be empty");
-
-        this.zipCode = normalizedCep;
+        String normalizedZipCode = zipCode.replaceAll("\\D", "");
+        if(normalizedZipCode.length() != 8)
+            throw new BusinessRuleException("Invalid zipCode");
+        
+        this.zipCode = normalizedZipCode;
         this.street = street.trim();
         this.number = number.trim();
         this.neighborhood = neighborhood != null ? neighborhood.trim() : null;
@@ -41,9 +39,14 @@ public class Address {
         this.complement = complement != null ? complement.trim() : null;
     }
 
-    private String normalizedCep(String zipCode){
-        if (zipCode == null) return "";
-        return zipCode.trim().replaceAll("[^0-9]", "");
+    private static void validateNonEmpty(String value, String field){
+        if (value == null || value.trim().isEmpty())
+            throw new BusinessRuleException(field + " must not be empty");
+    }
+
+    private static void validateNonNull(Object value, String field){
+        if(value == null)
+            throw new BusinessRuleException(field + " must not be null");
     }
 
     @NotNull public String getZipCode() {return zipCode;}
