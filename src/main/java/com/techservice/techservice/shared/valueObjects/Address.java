@@ -5,6 +5,9 @@ import jakarta.persistence.Embeddable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+import java.util.stream.Stream;
+
 @Embeddable
 public class Address {
     private  String zipCode;
@@ -16,7 +19,7 @@ public class Address {
 
     protected Address(){}
 
-    public Address(@NotNull String zipCode,
+    public static Address create(@NotNull String zipCode,
                    @NotNull String street,
                    @NotNull String number,
                    @Nullable String neighborhood,
@@ -30,23 +33,29 @@ public class Address {
         String normalizedZipCode = zipCode.replaceAll("\\D", "");
         if(normalizedZipCode.length() != 8)
             throw new BusinessRuleException("Invalid zipCode");
-        
-        this.zipCode = normalizedZipCode;
-        this.street = street.trim();
-        this.number = number.trim();
-        this.neighborhood = neighborhood != null ? neighborhood.trim() : null;
-        this.city = city != null ? city.trim() : null;
-        this.complement = complement != null ? complement.trim() : null;
+
+        Address address = new Address();
+        address.zipCode = normalizedZipCode;
+        address.street = street.trim();
+        address.number = number.trim();
+        address.neighborhood = neighborhood != null ? neighborhood.trim() : null;
+        address.city = city != null ? city.trim() : null;
+        address.complement = complement != null ? complement.trim() : null;
+
+        return address;
+    }
+
+
+    private String resolve(String newValue, String currentValue) {
+        if (newValue == null || newValue.isBlank())
+            return currentValue;
+
+        return newValue.trim();
     }
 
     private static void validateNonEmpty(String value, String field){
         if (value == null || value.trim().isEmpty())
             throw new BusinessRuleException(field + " must not be empty");
-    }
-
-    private static void validateNonNull(Object value, String field){
-        if(value == null)
-            throw new BusinessRuleException(field + " must not be null");
     }
 
     @NotNull public String getZipCode() {return zipCode;}
