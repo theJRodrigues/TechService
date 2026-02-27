@@ -63,6 +63,7 @@ public class Client {
                          String document,
                          Address address,
                          Company company) {
+
         validateNonEmpty(name, "Name");
         validateNonEmpty(phone, "Phone");
         validateNonEmpty(email, "Email");
@@ -95,10 +96,17 @@ public class Client {
                         String phone,
                         String email
                         ) {
-        Stream<String> values = Stream.of(name, phone, email);
-        if(values.allMatch(Objects::isNull) || values.allMatch(v -> v.trim().isEmpty()))
-            return;
-        }
+        if (Stream.of(name, phone, email).allMatch( v -> v ==null || v.isBlank()))
+            throw new BusinessRuleException("At least one field must be provided");
+
+        if (name != null && !name.isBlank())
+            this.name = name.trim();
+
+        if (phone != null && !phone.isBlank())
+            this.phone = phone.replaceAll("\\D", "");
+
+        if (email != null && !email.isBlank())
+            this.email = email.trim();
     }
 
     public void updateAddress(String zipCode,
@@ -107,18 +115,13 @@ public class Client {
                               String neighborhood,
                               String city,
                               String complement) {
-        if(Stream.of(zipCode, street, number, neighborhood, city, complement)
-                .allMatch(Objects::isNull)) {
-            return;
-        }
-
-        this.address = new Address(
-                Objects.requireNonNullElse(zipCode, this.address.getZipCode()),
-                Objects.requireNonNullElse(street, this.address.getStreet()),
-                Objects.requireNonNullElse(number, this.address.getNumber()),
-                Objects.requireNonNullElse(neighborhood, this.address.getNeighborhood()),
-                Objects.requireNonNullElse(city, this.address.getCity()),
-                Objects.requireNonNullElse(complement, this.address.getComplement())
+        this.address = Address.create(
+                zipCode,
+                street,
+                number,
+                neighborhood,
+                city,
+                complement
         );
     }
 
