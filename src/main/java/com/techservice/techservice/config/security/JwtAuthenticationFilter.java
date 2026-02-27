@@ -49,11 +49,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         .findByIdAndCompanyId(payload.id(), payload.companyID())
                         .orElseThrow(() -> new AccessDeniedException("Invalid token context"));
 
-                if(!account.isActive()){
+                if(!accountRepository.existsByIdAndCompanyIdAndIsActiveTrue(payload.id(), payload.companyID())){
                     throw new AccessDeniedException("Invalid token context");
                 }
 
-                if(!companyRepository.existsById(payload.companyID())){
+                if(!companyRepository.existsByIdAndIsActiveTrue(payload.companyID())){
                     throw new AccessDeniedException("Invalid token context");
                 }
 

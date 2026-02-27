@@ -9,11 +9,9 @@ import com.techservice.techservice.modules.auth.services.RefreshTokenService;
 import com.techservice.techservice.shared.exceptions.InvalidRefreshTokenException;
 import com.techservice.techservice.shared.services.JWTService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.UUID;
 
 @Service
 public class AuthRefreshTokenUseCase {
@@ -49,9 +47,10 @@ public class AuthRefreshTokenUseCase {
             throw new InvalidRefreshTokenException();
         };
 
-        if (!accRepository.existsByIdAndIsActiveTrue(foundRT.getAccountId())) {
+        if (!accRepository.existsByIdAndCompanyIdAndIsActiveTrue(foundRT.getAccountId(), foundRT.getCompanyId())) {
             throw new InvalidRefreshTokenException();
         }
+
         String rawRT = rtService.generateRawToken();
         String hashRT = rtService.hash(rawRT);
         RefreshToken newRT = RefreshToken.create(

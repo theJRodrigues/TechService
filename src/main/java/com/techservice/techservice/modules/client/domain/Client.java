@@ -9,7 +9,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 @Entity
 @Table(name = "clients")
@@ -69,12 +71,13 @@ public class Client {
 
         validateDocument(documentType, document);
 
+
         Client newClient = new Client();
         newClient.name = name.trim();
-        newClient.phone = phone.trim();
+        newClient.phone = phone.replaceAll("\\D", "");
         newClient.email = email.trim();
         newClient.documentType = documentType;
-        newClient.document = document.replaceAll("[^0-9]", "");
+        newClient.document = document.replaceAll("\\D", "");
         newClient.address = address;
         newClient.company = company;
 
@@ -90,20 +93,33 @@ public class Client {
 
     public void update (String name,
                         String phone,
-                        String email,
-                        Address address) {
-        if(name != null && !name.trim().isEmpty()) {
-            this.name = name.trim();
+                        String email
+                        ) {
+        Stream<String> values = Stream.of(name, phone, email);
+        if(values.allMatch(Objects::isNull) || values.allMatch(v -> v.trim().isEmpty()))
+            return;
         }
-        if(phone != null && !phone.trim().isEmpty()) {
-            this.phone = phone.trim();
+    }
+
+    public void updateAddress(String zipCode,
+                              String street,
+                              String number,
+                              String neighborhood,
+                              String city,
+                              String complement) {
+        if(Stream.of(zipCode, street, number, neighborhood, city, complement)
+                .allMatch(Objects::isNull)) {
+            return;
         }
-        if(email != null && !email.trim().isEmpty()) {
-            this.email = email.trim();
-        }
-        if(address != null) {
-            this.address = address;
-        }
+
+        this.address = new Address(
+                Objects.requireNonNullElse(zipCode, this.address.getZipCode()),
+                Objects.requireNonNullElse(street, this.address.getStreet()),
+                Objects.requireNonNullElse(number, this.address.getNumber()),
+                Objects.requireNonNullElse(neighborhood, this.address.getNeighborhood()),
+                Objects.requireNonNullElse(city, this.address.getCity()),
+                Objects.requireNonNullElse(complement, this.address.getComplement())
+        );
     }
 
     private static void validateNonEmpty(String value, String field){
@@ -122,7 +138,7 @@ public class Client {
         if(document == null || document.trim().isEmpty())
             throw new BusinessRuleException("Document must not be empty");
 
-        String normalized = document.replaceAll("[^0-9]", "");
+        String normalized = document.replaceAll("\\D", "");
         if(type == DocumentType.CPF && normalized.length() != 11)
             throw new BusinessRuleException("Invalid CPF");
 

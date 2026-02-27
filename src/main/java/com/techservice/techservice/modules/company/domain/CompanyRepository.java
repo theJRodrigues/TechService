@@ -9,5 +9,6 @@ public interface CompanyRepository {
     Optional<Company> findById(UUID id);
     boolean existsByCNPJ(String CNPJ);
     boolean existsById(UUID id);
+    boolean existsByIdAndIsActiveTrue(UUID id);
     void deleteById(UUID id);
 }
