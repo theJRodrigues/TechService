@@ -1,6 +1,6 @@
 package com.techservice.techservice.modules.client.dto;
 
-import com.techservice.techservice.shared.valueObjects.Address;
+import com.techservice.techservice.shared.dtos.ResponseAddressDTO;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -12,7 +12,7 @@ public record ClientResponseDTO(
         String email,
         String documentType,
         String document,
-        Address address,
+        ResponseAddressDTO address,
         Boolean isActive,
         Instant createdAt,
         Instant updatedAt

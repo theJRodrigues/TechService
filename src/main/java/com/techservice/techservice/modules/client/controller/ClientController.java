@@ -22,7 +22,7 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<ClientResponseDTO> execute(@RequestBody @Valid CreateClientRequestDTO dto){
+    public ResponseEntity<ClientResponseDTO> create(@RequestBody @Valid CreateClientRequestDTO dto){
         ClientResponseDTO newClient = useCase.execute(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(newClient);
     }

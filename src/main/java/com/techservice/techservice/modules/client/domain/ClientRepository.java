@@ -9,6 +9,8 @@ public interface ClientRepository {
 
     Optional<Client> findByIdAndCompanyId(UUID id, UUID companyId);
 
+    Optional<Client> findByIdAndCompanyIdAndIsActiveTrue(UUID id, UUID companyId);
+
     List<Client> findAllByCompanyIdAndIsActiveTrue(UUID companyId);
 
     List<Client> findAllByCompanyId(UUID companyId);
