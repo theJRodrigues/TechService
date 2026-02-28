@@ -30,7 +30,7 @@ public class Account {
     private String password;
 
     @Column(name = "is_active", nullable = false)
-    private boolean isActive = true;
+    private Boolean isActive = true;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -91,7 +91,7 @@ public class Account {
     }
 
     public void deactivate(){
-        if (!this.isActive())
+        if (Boolean.FALSE.equals(this.isActive))
             throw new BusinessRuleException("Account is already inactive");
 
         this.isActive = false;
@@ -100,7 +100,7 @@ public class Account {
     @NotNull public String getName() {return name;}
     @NotNull public String getEmail() {return email;}
     @NotNull public String getPassword() {return password;}
-    public boolean isActive() {return isActive;}
+    @NotNull public Boolean isActive() {return isActive;}
     @NotNull public Role getRole() {return role;}
     @NotNull public Company getCompany() {return company;}
     @NotNull public Instant getCreatedAt() {return createdAt;}

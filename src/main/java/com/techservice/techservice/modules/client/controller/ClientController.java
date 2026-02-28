@@ -30,7 +30,7 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newClient);
     }
 
-    @PatchMapping("/update/{id}")
+    @PatchMapping("/{id}/update")
     public ResponseEntity<ClientResponseDTO> update(@Valid @RequestBody UpdateClientRequestDTO dto, @PathVariable UUID id){
         ClientResponseDTO updatedClient = updateClientUseCase.execute(dto, id);
         return ResponseEntity.status(HttpStatus.OK).body(updatedClient);
