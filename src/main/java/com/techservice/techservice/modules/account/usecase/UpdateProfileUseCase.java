@@ -5,7 +5,7 @@ import com.techservice.techservice.config.security.AuthenticatedAccount;
 import com.techservice.techservice.modules.account.domain.Account;
 import com.techservice.techservice.modules.account.domain.AccountRepository;
 import com.techservice.techservice.modules.account.dto.AccountResponseDTO;
-import com.techservice.techservice.modules.account.dto.UpdateProfileRequestDTO;
+import com.techservice.techservice.modules.account.dto.UpdateAccountRequestDTO;
 import com.techservice.techservice.modules.account.mapper.AccountMapper;
 import com.techservice.techservice.shared.exceptions.BusinessRuleException;
 import com.techservice.techservice.shared.exceptions.NotFoundException;
@@ -27,7 +27,7 @@ public class UpdateProfileUseCase {
     }
 
     @Transactional
-    public AccountResponseDTO execute(UUID id, UpdateProfileRequestDTO dto) {
+    public AccountResponseDTO execute(UUID id, UpdateAccountRequestDTO dto) {
         if (dto.name() == null && dto.email() == null) {
             throw new BusinessRuleException("At least one field must be provided");
         }

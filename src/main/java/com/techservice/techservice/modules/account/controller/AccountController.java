@@ -2,7 +2,7 @@ package com.techservice.techservice.modules.account.controller;
 
 import com.techservice.techservice.modules.account.dto.AccountResponseDTO;
 import com.techservice.techservice.modules.account.dto.CreateAccountRequestDTO;
-import com.techservice.techservice.modules.account.dto.UpdateProfileRequestDTO;
+import com.techservice.techservice.modules.account.dto.UpdateAccountRequestDTO;
 import com.techservice.techservice.modules.account.usecase.CreateAccountUseCase;
 import com.techservice.techservice.modules.account.usecase.DeactivateAccountByIdUseCase;
 import com.techservice.techservice.modules.account.usecase.GetAllAccountsUseCase;
@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -53,10 +54,9 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}/update")
-    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody @Valid UpdateProfileRequestDTO dto) {
+    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody @Valid UpdateAccountRequestDTO dto) {
         AccountResponseDTO updatedAccount = updateUseCase.execute(id, dto);
         return ResponseEntity.ok(updatedAccount);
     }
