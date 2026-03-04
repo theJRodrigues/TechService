@@ -1,6 +1,8 @@
 package com.techservice.techservice.modules.client.domain;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.Optional;
 import java.util.UUID;
 
@@ -9,9 +11,6 @@ public interface ClientRepository {
 
     Optional<Client> findByIdAndCompanyId(UUID id, UUID companyId);
 
-    Optional<Client> findByIdAndCompanyIdAndIsActiveTrue(UUID id, UUID companyId);
+    Page<Client> findAllByCompanyId(UUID companyId, Pageable pageable);
 
-    List<Client> findAllByCompanyIdAndIsActiveTrue(UUID companyId);
-
-    List<Client> findAllByCompanyId(UUID companyId);
 }

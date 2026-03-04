@@ -40,7 +40,7 @@ public class GlobalExceptionsHandler {
     public ResponseEntity<ErrorResponse<?>> handleForbiddenException(InvalidCredentialsException ex){
         ErrorResponse<String> error = new ErrorResponse<>(
                 HttpStatus.FORBIDDEN.value(),
-                "FORBIDDEN",
+                "UNAUTHORIZED",
                 ex.getMessage()
         );
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
