@@ -25,6 +25,9 @@ public class Company {
     @Column(nullable = false)
     private String CNPJ;
 
+    @Column(nullable = false, name = "is_active")
+    private Boolean isActive = true;
+
     @CreationTimestamp
     @Column(nullable = false, name = "created_at", updatable = false)
     private Instant createdAt;
@@ -66,4 +69,5 @@ public class Company {
     @NotNull public String getCNPJ() {return CNPJ;}
     @NotNull public Instant getCreatedAt() {return createdAt;}
     @NotNull public Instant getUpdatedAt() {return updatedAt;}
+    @NotNull public Boolean isActive() {return isActive;}
 }
