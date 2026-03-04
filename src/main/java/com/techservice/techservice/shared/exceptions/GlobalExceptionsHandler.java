@@ -36,6 +36,16 @@ public class GlobalExceptionsHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<ErrorResponse<?>> handleForbiddenException(InvalidCredentialsException ex){
+        ErrorResponse<String> error = new ErrorResponse<>(
+                HttpStatus.FORBIDDEN.value(),
+                "FORBIDDEN",
+                ex.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse<?>> handleValidationError(MethodArgumentNotValidException ex){
         Map<String, String>  errorsMap = new HashMap<>();
