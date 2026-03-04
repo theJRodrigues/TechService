@@ -3,6 +3,7 @@ package com.techservice.techservice.config.security;
 import com.techservice.techservice.modules.account.domain.Account;
 import com.techservice.techservice.modules.account.domain.AccountRepository;
 import com.techservice.techservice.modules.company.domain.CompanyRepository;
+import com.techservice.techservice.shared.Routes.Routes;
 import com.techservice.techservice.shared.services.JWTService;
 import com.techservice.techservice.shared.services.TokenPayload;
 import io.jsonwebtoken.JwtException;
@@ -27,11 +28,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JWTService jwtService;
     private final AccountRepository accountRepository;
     private final CompanyRepository companyRepository;
+    private static final List<String> PUBLIC_PATHS = List.of(
+            Routes.AUTH + "login",
+            Routes.AUTH + "logout",
+            Routes.AUTH + "refresh",
+            Routes.COMPANY
+    );
 
     public JwtAuthenticationFilter(JWTService service, AccountRepository repository, CompanyRepository companyRepository) {
         this.jwtService = service;
         this.accountRepository = repository;
         this.companyRepository = companyRepository;
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request){
+        String path = request.getRequestURI();
+        return PUBLIC_PATHS.stream().anyMatch(path::startsWith);
     }
 
     @Override
@@ -49,7 +62,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         .findByIdAndCompanyId(payload.id(), payload.companyID())
                         .orElseThrow(() -> new AccessDeniedException("Invalid token context"));
 
-                if(accountRepository.existsByIdAndCompanyIdAndIsActiveTrue(payload.id(), payload.companyID())){
+                if(!account.isActive()){
                     throw new AccessDeniedException("Invalid token context");
                 }
 
