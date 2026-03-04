@@ -15,14 +15,14 @@ public class RestAccessDeniedHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest request,
                        HttpServletResponse response,
                        AccessDeniedException accessDeniedException) throws IOException, ServletException {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.setContentType("application/json");
-            response.getWriter().write("""
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        response.setContentType("application/json");
+        response.getWriter().write("""
                     {
                         "status": 403,
-                        "error": "INVALID_TOKEN_CONTEXT",
-                        "message": "Token context is no longer valid. Please log in again"
+                        "error": "ACCESS_DENIED",
+                        "message": "You do not have permission to access this resource"
                     }
-                    """);
+                """);
     }
 }
