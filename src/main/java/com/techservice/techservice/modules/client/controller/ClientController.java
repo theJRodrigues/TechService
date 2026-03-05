@@ -5,7 +5,7 @@ import com.techservice.techservice.modules.client.dto.CreateClientRequestDTO;
 import com.techservice.techservice.modules.client.dto.SearchSuggestionsByNameResponseDTO;
 import com.techservice.techservice.modules.client.dto.UpdateClientRequestDTO;
 import com.techservice.techservice.modules.client.usecase.CreateClientUseCase;
-import com.techservice.techservice.modules.client.usecase.FindClientSuggestionsByNameUseCase;
+import com.techservice.techservice.modules.client.usecase.SearchClientSuggestionsByNameUseCase;
 import com.techservice.techservice.modules.client.usecase.GetClientsPageUseCase;
 import com.techservice.techservice.modules.client.usecase.UpdateClientUseCase;
 import com.techservice.techservice.shared.Routes.Routes;
@@ -27,13 +27,16 @@ public class ClientController {
     private final CreateClientUseCase createClientUseCase;
     private final UpdateClientUseCase updateClientUseCase;
     private final GetClientsPageUseCase getClientsPageUseCase;
-    private final FindClientSuggestionsByNameUseCase findClientSuggestionsByNameUseCase;
+    private final SearchClientSuggestionsByNameUseCase searchClientSuggestionsByNameUseCase;
 
-    public ClientController(CreateClientUseCase useCase, UpdateClientUseCase updateClientUseCase, GetClientsPageUseCase getClientsPageUseCase, FindClientSuggestionsByNameUseCase findByNameUseCase) {
+    public ClientController(CreateClientUseCase useCase,
+                            UpdateClientUseCase updateClientUseCase,
+                            GetClientsPageUseCase getClientsPageUseCase,
+                            SearchClientSuggestionsByNameUseCase searchClientSuggestionsByNameUseCase) {
         this.createClientUseCase = useCase;
         this.updateClientUseCase = updateClientUseCase;
         this.getClientsPageUseCase = getClientsPageUseCase;
-        this.findClientSuggestionsByNameUseCase = findByNameUseCase;
+        this.searchClientSuggestionsByNameUseCase = searchClientSuggestionsByNameUseCase;
     }
 
     @PostMapping
@@ -65,8 +68,8 @@ public class ClientController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<SearchSuggestionsByNameResponseDTO>> findByName(@RequestParam(name = "name") String name){
-        var search = findClientSuggestionsByNameUseCase.execute(name);
+    public ResponseEntity<List<SearchSuggestionsByNameResponseDTO>> searchSuggestionsByName(@RequestParam(name = "name") String name){
+        var search = searchClientSuggestionsByNameUseCase.execute(name);
         return ResponseEntity.ok(search);
     }
 

@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class FindClientSuggestionsByNameUseCase {
+public class SearchClientSuggestionsByNameUseCase {
     private final ClientRepository repository;
     private final AuthenticatedAccountProvider authProvider;
 
-    public FindClientSuggestionsByNameUseCase(ClientRepository repository, AuthenticatedAccountProvider authProvider) {
+    public SearchClientSuggestionsByNameUseCase(ClientRepository repository, AuthenticatedAccountProvider authProvider) {
         this.repository = repository;
         this.authProvider = authProvider;
     }
