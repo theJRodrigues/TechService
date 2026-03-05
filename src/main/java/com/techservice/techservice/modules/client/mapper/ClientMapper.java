@@ -3,6 +3,7 @@ package com.techservice.techservice.modules.client.mapper;
 import com.techservice.techservice.modules.client.domain.Client;
 import com.techservice.techservice.modules.client.dto.ClientResponseDTO;
 import com.techservice.techservice.modules.client.dto.CreateClientRequestDTO;
+import com.techservice.techservice.modules.client.dto.SearchSuggestionsByNameResponseDTO;
 import com.techservice.techservice.modules.company.domain.Company;
 import com.techservice.techservice.shared.dtos.ResponseAddressDTO;
 import com.techservice.techservice.shared.valueObjects.Address;
@@ -50,5 +51,9 @@ public class ClientMapper {
                 client.isActive(),
                 client.getCreatedAt(),
                 client.getUpdatedAt());
+    }
+
+    public static SearchSuggestionsByNameResponseDTO toSearchSuggestionsResponse(Client client){
+        return new SearchSuggestionsByNameResponseDTO(client.getId(), client.getName());
     }
 }

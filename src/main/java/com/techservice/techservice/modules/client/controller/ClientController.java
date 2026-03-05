@@ -2,8 +2,10 @@ package com.techservice.techservice.modules.client.controller;
 
 import com.techservice.techservice.modules.client.dto.ClientResponseDTO;
 import com.techservice.techservice.modules.client.dto.CreateClientRequestDTO;
+import com.techservice.techservice.modules.client.dto.SearchSuggestionsByNameResponseDTO;
 import com.techservice.techservice.modules.client.dto.UpdateClientRequestDTO;
 import com.techservice.techservice.modules.client.usecase.CreateClientUseCase;
+import com.techservice.techservice.modules.client.usecase.FindClientSuggestionsByNameUseCase;
 import com.techservice.techservice.modules.client.usecase.GetClientsPageUseCase;
 import com.techservice.techservice.modules.client.usecase.UpdateClientUseCase;
 import com.techservice.techservice.shared.Routes.Routes;
@@ -16,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -24,11 +27,13 @@ public class ClientController {
     private final CreateClientUseCase createClientUseCase;
     private final UpdateClientUseCase updateClientUseCase;
     private final GetClientsPageUseCase getClientsPageUseCase;
+    private final FindClientSuggestionsByNameUseCase findClientSuggestionsByNameUseCase;
 
-    public ClientController(CreateClientUseCase useCase, UpdateClientUseCase updateClientUseCase, GetClientsPageUseCase getClientsPageUseCase) {
+    public ClientController(CreateClientUseCase useCase, UpdateClientUseCase updateClientUseCase, GetClientsPageUseCase getClientsPageUseCase, FindClientSuggestionsByNameUseCase findByNameUseCase) {
         this.createClientUseCase = useCase;
         this.updateClientUseCase = updateClientUseCase;
         this.getClientsPageUseCase = getClientsPageUseCase;
+        this.findClientSuggestionsByNameUseCase = findByNameUseCase;
     }
 
     @PostMapping
@@ -58,4 +63,11 @@ public class ClientController {
 
         return ResponseEntity.ok(clients);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<SearchSuggestionsByNameResponseDTO>> findByName(@RequestParam(name = "name") String name){
+        var search = findClientSuggestionsByNameUseCase.execute(name);
+        return ResponseEntity.ok(search);
+    }
+
 }

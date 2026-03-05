@@ -3,6 +3,7 @@ package com.techservice.techservice.modules.client.domain;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -12,5 +13,7 @@ public interface ClientRepository {
     Optional<Client> findByIdAndCompanyId(UUID id, UUID companyId);
 
     Page<Client> findAllByCompanyId(UUID companyId, Pageable pageable);
+
+    List<Client> findTop5ByCompanyIdAndNameStartingWithIgnoreCase(UUID companyId, String name);
 
 }
